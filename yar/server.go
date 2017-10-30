@@ -83,16 +83,14 @@ func (c *serverCodec) WriteResponse(r *rpc.Response, x interface{}) error {
 
 	resp := serverResponse{
 		Id:     id,
-		Error:  "",
-		Result: nil,
-		Output: "",
-		Status: 0,
+		Status: 0x0,
 	}
 
 	if r.Error == "" {
 		resp.Result = &x
 	} else {
-		resp.Error = r.Error
+		resp.Error.Message = r.Error
+		resp.Status = 0x40
 	}
 
 	Id := (int32)(resp.Id)

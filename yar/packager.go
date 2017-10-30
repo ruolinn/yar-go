@@ -112,9 +112,20 @@ func (m *serverRequest) GetMethod() string {
 	return ""
 }
 
+type serverError struct {
+	Message string `msgpack:"message"`
+	Code    string
+	File    string
+	Line    string
+}
+
+func (se serverError) Error() string {
+	return se.Message
+}
+
 type serverResponse struct {
 	Id     int64        `json:"i" msgpack:"i"`
-	Error  string       `json:"e" msgpack:"e"`
+	Error  serverError  `json:"e" msgpack:"e"`
 	Output string       `json:"o" msgpack:"o"`
 	Status int          `json:"s" msgpack:"s"`
 	Result *interface{} `json:"r" msgpack:"r"`
@@ -127,13 +138,6 @@ func (m *serverResponse) GetId() int64 {
 		return m.Id
 	}
 	return 0
-}
-
-func (m *serverResponse) GetError() string {
-	if m != nil && m.Error != "" {
-		return m.Error
-	}
-	return ""
 }
 
 type clientRequest struct {
